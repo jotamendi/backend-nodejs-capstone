@@ -23,15 +23,9 @@ app.use(express.json());
 
 // Route files
 
-// authRoutes Step 2: import the authRoutes and store in a constant called authRoutes
-//{{insert code here}}
-
-// import the secondChanceItemsRoutes and store in a constant called secondChanceItemsRoutes
+const authRoutes = require('./routes/authRoutes');
 const secondChanceItemsRoutes = require('./routes/secondChanceItemsRoutes');
-
-// import the searchRoutes and store in a constant called searchRoutes
 const searchRoutes = require('./routes/searchRoutes');
-
 
 const pinoHttp = require('pino-http');
 const logger = require('./logger');
@@ -39,13 +33,9 @@ const logger = require('./logger');
 app.use(pinoHttp({ logger }));
 
 // Use Routes
-// authRoutes Step 2: add the authRoutes and to the server by using the app.use() method.
-//{{insert code here}}
 
-// Add the secondChanceItemsRoutes to the server by using the app.use() method.
+app.use('/api/auth', authRoutes);
 app.use('/api/secondchance/items', secondChanceItemsRoutes);
-
-// Add the searchRoutes to the server by using the app.use() method.
 app.use('/api/secondchance/search', searchRoutes);
 
 
