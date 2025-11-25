@@ -4,7 +4,8 @@ const jwt = require('jsonwebtoken');
 const router = express.Router();
 const connectToDatabase = require('../models/db');
 const dotenv = require('dotenv');
-const pino = require('pino');  // Import Pino logger
+const pino = require('pino');
+const { body, validationResult } = require('express-validator');
 
 //Create JWT secret
 dotenv.config();
@@ -77,12 +78,60 @@ router.post('/login', async (req, res) => {
         } else {
             logger.error('User not found');
             return res.status(404).json({ error: 'User not found' });
-        }jwt.sign(user._id, JWT_SECRET)
-        res.json({authtoken, userName, userEmail });
-        
+        }
     } catch (e) {
          return res.status(500).send('Internal server error');
 
+    }
+});
+
+router.put('/update', async (req, res) => {
+
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      logger.error('Validation errors in update request', errors.array());
+      return res.status(400).json({ errors: errors.array() });
+    }
+
+    try {
+        const email = req.headers.email;
+        if (!email) {
+            logger.error('Email not found in the request headers');
+            return res.status(400).json({ error: "Email not found in the request headers" });
+        }
+        const db = await connectToDatabase();
+        const collection = db.collection("users");
+        const existingUser = await collection.findOne({ email });
+
+        if(!existingUser) {
+            return res.status(404).json({ error: "User not found in" });
+        }
+
+        if (!req.body.firstName) {
+            logger.error('firstName not found in the request headers');
+            return res.status(400).json({ error: "Email not found in the request headers" });
+        }
+
+        existingUser.firstName = req.body.firstName;
+        existingUser.updatedAt = new Date();
+
+        const updatedUser = await collection.findOneAndUpdate(
+            { email },
+            { $set: existingUser },
+            { returnDocument: 'after' }
+        );
+
+        const payload = {
+            user: {
+               id: updatedUser._id.toString(),
+            },
+        };
+        
+        const authtoken = jwt.sign(payload, JWT_SECRET);
+        res.json({authtoken});
+    } catch (e) {
+        console.log("----------->", e);
+        return res.status(500).send('Internal server error');
     }
 });
 
