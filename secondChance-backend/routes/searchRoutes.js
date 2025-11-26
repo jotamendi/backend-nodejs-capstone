@@ -27,9 +27,9 @@ router.get('/', async (req, res, next) => {
     // Fetch filtered gifts using the find(query) method.
     const gifts = await collection.find(query).toArray()
     res.json(gifts)
-    } catch (e) {
-      next(e)
-    }
+  } catch (e) {
+    next(e)
+  }
 })
 
 module.exports = router
