@@ -57,7 +57,6 @@ const handleSubmit = async (e) => {
   try {
     const authtoken = sessionStorage.getItem("auth-token");
     const email = sessionStorage.getItem("email"); // Get the email from session storage
-
     if (!authtoken || !email) {
       navigate("/app/login");
       return;

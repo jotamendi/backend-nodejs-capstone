@@ -107,12 +107,12 @@ router.put('/update', async (req, res) => {
             return res.status(404).json({ error: "User not found in" });
         }
 
-        if (!req.body.firstName) {
-            logger.error('firstName not found in the request headers');
-            return res.status(400).json({ error: "Email not found in the request headers" });
+        if (!req.body.name) {
+            logger.error('Name not found in payload');
+            return res.status(400).json({ error: "Name not found in payload" });
         }
 
-        existingUser.firstName = req.body.firstName;
+        existingUser.firstName = req.body.name;
         existingUser.updatedAt = new Date();
 
         const updatedUser = await collection.findOneAndUpdate(
@@ -130,7 +130,6 @@ router.put('/update', async (req, res) => {
         const authtoken = jwt.sign(payload, JWT_SECRET);
         res.json({authtoken});
     } catch (e) {
-        console.log("----------->", e);
         return res.status(500).send('Internal server error');
     }
 });
