@@ -41,6 +41,11 @@ function DetailsPage () {
     window.scrollTo(0, 0)
   }, [itemId, isLoggedIn, navigate])
 
+  const formatDate = (timestamp) => {
+    const date = new Date(timestamp * 1000)
+    return date.toLocaleString('default', { month: 'long', day: 'numeric', year: 'numeric' })
+  }
+
   const handleBackClick = () => {
     navigate(-1) // Navigates back to the previous page
   }
@@ -69,7 +74,7 @@ function DetailsPage () {
           {/* Product details */}
           <p><strong>Category:</strong> {gift.category}</p>
           <p><strong>Condition:</strong> {gift.condition}</p>
-          <p><strong>Date Added:</strong> {gift.date_added}</p>
+          <p><strong>Date Added:</strong> { formatDate(gift.date_added) }</p>
           <p><strong>Age (Years):</strong> {gift.age_years}</p>
           <p><strong>Description:</strong> {gift.description}</p>
         </div>
