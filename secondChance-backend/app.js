@@ -50,6 +50,6 @@ connectToDatabase().then(async () => {
     console.log(`Server running on port ${port}`)
   })
 })
-.catch((e) => console.error('Failed to connect to DB', e))
+  .catch((e) => console.error('Failed to connect to DB', e))
 
-module.exports = app;
+module.exports = app
